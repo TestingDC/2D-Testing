@@ -2,54 +2,21 @@ package Core;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
-import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
 
 public class Window {
-
+	
 	public Window() {
-		@SuppressWarnings("unused")
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		
-		@SuppressWarnings("unused")
-		DisplayMode displayMode = null;
-		DisplayMode[] modes = null;
-
-		try {
-			modes = Display.getAvailableDisplayModes();
-		} catch (LWJGLException e1) {
-			e1.printStackTrace();
-		}
-
-		for (int i = 0; i < modes.length; i++) {
-			int width = 0; int height = 0;
-			
-			if (modes[i].getWidth() == width && modes[i].getHeight() == height && modes[i].isFullscreenCapable()) {
-				displayMode = modes[i];
-			}
-		}
-
-		// Set up Display //
 		try {
 			Display.create(new PixelFormat(0, 16, 1));
 			Display.setTitle("Rise");
-		} catch (LWJGLException e) {
+			Mouse.setGrabbed(true);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		reload();
-		Mouse.setGrabbed(true); // Lock Mouse into Screen
-	}
-
-
-	// Getters/Setters // ******************************************** //
-
-	public void reload() {
+		
 		glEnable(GL_TEXTURE_2D);
 		glDisable(GL_DEPTH_TEST);
 		glMatrixMode(GL_PROJECTION);
@@ -61,6 +28,11 @@ public class Window {
 		glEnable(GL_COLOR_MATERIAL);
 	}
 
+	
+	
+
+	// Getters/Setters // ******************************************** //
+
 	public void setResizeable(boolean val) {
 		Display.setResizable(val);
 	}
@@ -69,8 +41,8 @@ public class Window {
 		Display.setTitle(title);
 	}
 
-	public void setFullscreen(boolean val) {
-		try { Display.setFullscreen(val); reload(); } catch (LWJGLException e) {e.printStackTrace();}
+	/*public void setFullscreen(boolean val) {
+		try { Display.setFullscreen(val); } catch (LWJGLException e) { e.printStackTrace(); }
 
 	}
 
@@ -83,10 +55,9 @@ public class Window {
 			Display.setTitle("Rise");
 			Display.setResizable(false);
 
-			reload();
 			Mouse.setGrabbed(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 }
