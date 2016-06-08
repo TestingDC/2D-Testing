@@ -2,6 +2,8 @@ package Core;
 
 public class Game {
 	
+	Window window = new Window();
+	
 	public static void init(String Args[]) {
 		new Game();
 	}
@@ -9,7 +11,7 @@ public class Game {
 	//---//
 	
 	public Game() {
-		System.out.println("#-----# INIT");
+		System.out.println("### Init ###");
 		
 	}
 	
