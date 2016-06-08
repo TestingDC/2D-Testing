@@ -11,7 +11,7 @@ public class Window {
 	public Window() {
 		try {
 			Display.create(new PixelFormat(0, 16, 1));
-			Display.setTitle("Rise");
+			Display.setTitle("Display");
 			Mouse.setGrabbed(true);
 		} catch (Exception e) {
 			e.printStackTrace();
