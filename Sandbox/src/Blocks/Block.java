@@ -2,24 +2,23 @@ package Blocks;
 
 import java.awt.Rectangle;
 
-public class Block {
+public class Block extends Rectangle {
 	
-	public int id = 0;
-	public int metaid = 0;
-	public int rotation = 0;
+	private static final long serialVersionUID = 1L;
+	
+	public short id = 0;
+	public byte metaid = 0;
+	public byte rotation = 0;
+	public float lightLevel = 0;
+	public float lightBlock = 0.2f;
 	public String unknown;
 	
-	public Block(int id, int metaid, int rotation) {
+	public Block(short id, byte metaid, byte rotation, float lightLevel, float lightBlock, Rectangle box) {
 		this.id = id;
 		this.metaid = metaid;
 		this.rotation = rotation;
+		this.lightLevel = lightLevel;
+		this.lightBlock = lightBlock;
+		this.setBounds(box);
 	}
-	
-	public void setBounds(Rectangle rectangle) {
-		setBounds(rectangle);
-	}
-	
-	public void render() {
-		// Soon. TODO
-	}	
 }

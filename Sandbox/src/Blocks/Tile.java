@@ -6,7 +6,7 @@ public class Tile {
 		
 	}
 	
-	public void Batching() {
+	public void stitchBlockTiles() {
 		
 	}
 	
