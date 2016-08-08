@@ -252,20 +252,17 @@ public class World {
 		   int BlockY = (int) (Camera.CameraY/Game.TileSize);
 		   
 		   //Tile.sky.draw(0, 0, Display.getWidth(), Display.getHeight());
-		   //Tile.voidBlock.startUse();
+		   Tile.voidBlock.startUse();
 		   for(int l = 0; l < this.worldLayers.size(); l++) {
 			   for(int x = BlockX; x < BlockX + Game.DisplayXBlk; x++) {
 				   for(int y = BlockY; y < BlockY + Game.DisplayYBlk; y++) {
-					   //try {
-					   //Tile.requestTiles(worldLayers.get(l).getBlock(x, y).id);
-					   //} catch (Exception e) { }
 					   
 					   worldLayers.get(l).renderBlock(x, y);
 					   
 				   }
 			   }
 		   }
-		   //Tile.voidBlock.endUse();
+		   Tile.voidBlock.endUse();
 	   }
 	   
 	   

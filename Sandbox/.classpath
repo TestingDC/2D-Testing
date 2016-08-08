@@ -9,5 +9,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Seth Potter/Desktop/Dependencies/LWJGL/slick.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Seth Potter/Desktop/Dependencies/LWJGL/slick-util.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Seth Potter/Desktop/Dependencies/IndexLib.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

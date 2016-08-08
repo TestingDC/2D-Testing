@@ -82,7 +82,7 @@ public class Game {
 			updateFPS();
 			
 			Display.update();
-			Display.sync(60);
+			Display.sync(120);
 		}
 		//gameClock.interrupt();
 		Display.destroy();
@@ -105,6 +105,7 @@ public class Game {
 	private void tick() {
 		time.update();
 		MouseListener.tick();
+		name.WorldRender();
 		//name.UpdateChunks();
 	}
 	
