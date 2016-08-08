@@ -13,7 +13,6 @@ public class Chunk {
 	
 	byte size;
 	int x, y = 0;
-	Block[][] blocks = new Block[size][size];
 	
 	public Chunk(byte size, int x, int y) {
 		this.size = size;
