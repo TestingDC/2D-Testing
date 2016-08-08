@@ -12,7 +12,6 @@ public class Clock extends Thread {
 		
 	}
 	
-	
 	//---------//
 	
 	public void run() {
@@ -20,7 +19,7 @@ public class Clock extends Thread {
 		System.out.println("Starting Game Clock #");
 		
 		while(isRunning) {
-			try { 
+			try {
 				Thread.sleep(1000/ticksPerSecond); 
 			} catch (InterruptedException e) { 
 				System.out.println("Thread was Interrupted Closing.. Thread Name: " + this.getName());
