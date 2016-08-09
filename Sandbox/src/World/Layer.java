@@ -1,11 +1,18 @@
 package World;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import Blocks.Block;
 import Core.Game;
 
 public class Layer {
 	
 	private Chunk[][] Chunks;
+	private Block[][] Blocks;
 	private byte chunkSize;
 	private String name = "";
 	
@@ -13,80 +20,47 @@ public class Layer {
 		this.name = name;
 		this.chunkSize = chunkSize;
 		this.Chunks = new Chunk[(int) Math.floor(x_size/chunkSize)][(int) Math.floor(y_size/chunkSize)];
+		this.Blocks = new Block[x_size][y_size];
 		
 		for(int x = 0; x < Chunks.length; x++) {
 			for(int y = 0; y < Chunks[0].length; y++) {
 				Chunks[x][y] = new Chunk(Game.ChunkSize, x, y);
 			}
 		}
+		
 		fillLayer(new Block((short) -1, (byte) 0, (byte) 0, 0.0f, 0.0f, null));
 	}
 	
 	public void fillLayer(Block a) {
-		for(int x = 0; x < Chunks.length; x++) {
-			for(int y = 0; y < Chunks[0].length; y++) {
-				for(int blockX = 0; blockX < Chunks[x][y].blocks.length; blockX++) {
-					for(int blockY = 0; blockY < Chunks[x][y].blocks[0].length; blockY++) {
-						Chunks[x][y].blocks[blockX][blockY] = a;
-						//a.setBounds(x, y, width, height);
-					}
-				}
+		for(int x = 0; x < Blocks.length; x++) {
+			for(int y = 0; y < Blocks[0].length; y++) {
+				Blocks[x][y] = a;
+				//a.setBounds(x, y, width, height);
 			}
 		}
 	}
 	
 	public void fillChunk(int ChunkX, int ChunkY, Block a) {
-		Chunk c = Chunks[ChunkX][ChunkY];
-		
-		for(int blockX = 0; blockX < c.blocks.length; blockX++) {
-			for(int blockY = 0; blockY < c.blocks[0].length; blockY++) {
-				c.blocks[blockX][blockY] = a;
+		for(int l = (ChunkX * Game.ChunkSize); l < (ChunkX + Game.ChunkSize); l++) {
+			for(int w = (ChunkY * Game.ChunkSize); w < (ChunkY + Game.ChunkSize); w++) {
+				Blocks[l][w] = a;
 			}
 		}
 	}
 	
 	public void setBlock(int x, int y, Block a) {
-		int ChunkX = (int) Math.floor(x/chunkSize);
-		int ChunkY = (int) Math.floor(y/chunkSize);
-		byte BlockX = (byte) (((x/chunkSize) - ChunkX) * chunkSize);
-		byte BlockY = (byte) (((y/chunkSize) - ChunkY) * chunkSize);
-		
-		if(Chunks[ChunkX][ChunkY] == null) {
-			return;
-		}
-		
-		Chunks[ChunkX][ChunkY].blocks[BlockX][BlockY] = a;
+		Blocks[x][y] = a;
 	}
 	
 	public Block getBlock(int x, int y) {
-		int ChunkX = (int) Math.floor(x/chunkSize);
-		int ChunkY = (int) Math.floor(y/chunkSize);
-		byte BlockX = (byte) (((x/chunkSize) - ChunkX) * chunkSize);
-		byte BlockY = (byte) (((y/chunkSize) - ChunkY) * chunkSize);
-		
-		if(Chunks[ChunkX][ChunkY] == null) {
-			return null;
-		}
-		
-		return Chunks[ChunkX][ChunkY].blocks[BlockX][BlockY];
+		return Blocks[x][y];
 	}
 	
 	public void renderBlock(int x, int y) {
-		int ChunkX = (int) Math.floor(x/chunkSize);
-		int ChunkY = (int) Math.floor(y/chunkSize);
-		byte BlockX = (byte) (((x/chunkSize) - ChunkX) * chunkSize);
-		byte BlockY = (byte) (((y/chunkSize) - ChunkY) * chunkSize);
-		
-		//if(Chunks[ChunkX][ChunkY] == null) {
-			//return;
-		//}
-		
-		Chunks[ChunkX][ChunkY].blocks[BlockX][BlockY].render(x * Game.TileSize, y * Game.TileSize, Game.TileSize, Game.TileSize);
+		if(isBlockLoaded(x,y)) {
+			Blocks[x][y].render(x * Game.TileSize, y * Game.TileSize, Game.TileSize, Game.TileSize);
+		}
 	}
-	
-	//public void renderChunk(int ChunkX, int ChunkY) {
-		//Chunks[ChunkX][ChunkY].renderBlocks();
-	//}
 	
 	public int getLengthX() {
 		return Chunks.length * chunkSize;
@@ -103,15 +77,15 @@ public class Layer {
 	public void saveLayer(String fileName) {
 		for(int x = 0;x<Chunks.length;x++) {
 			for(int y = 0;y<Chunks[0].length;y++) {
-				Chunks[x][y].save(fileName, x, y);
+				saveChunk(fileName, x, y);
 			}
 		}
 	}
 	
 	public void unloadLayer() {
-		for(int x = 0;x<Chunks.length;x++) {
-			for(int y = 0;y<Chunks[0].length;y++) {
-				Chunks[x][y].blocks = null;
+		for(int x = 0;x<Blocks.length;x++) {
+			for(int y = 0;y<Blocks[0].length;y++) {
+				Blocks[x][y] = null;
 			}
 		}
 	}
@@ -119,13 +93,24 @@ public class Layer {
 	public void loadLayer(String fileName) {
 		for(int x = 0;x<Chunks.length;x++) {
 			for(int y = 0;y<Chunks[0].length;y++) {
-				Chunks[x][y].load(fileName, x, y);
+				loadChunk(fileName, x, y);
 			}
 		}
 	}
 	
-	public boolean isChunkLoaded(int x, int y) {
-		if(Chunks[x][y].blocks == null) {
+	public boolean isChunkLoaded(int ChunkX, int ChunkY) {
+		int x = ChunkX * Game.ChunkSize;
+		int y = ChunkY * Game.ChunkSize;
+		
+		if(Blocks[x][y] == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	public boolean isBlockLoaded(int x, int y) {
+		if(Blocks[x][y] == null) {
 			return false;
 		} else {
 			return true;
@@ -133,12 +118,61 @@ public class Layer {
 	}
 	
 	public void loadChunk(String fileName, int x, int y) {
-		Chunks[x][y].load(fileName, x, y);
+		try {
+	        FileInputStream fis = new FileInputStream(fileName + x + "_" + y + ".chunk");
+	        ObjectInputStream in = new ObjectInputStream(fis);
+	        for(int l = (x * Game.ChunkSize); l < ((x * Game.ChunkSize) + Game.ChunkSize); l++) {
+				for(int w = (y * Game.ChunkSize); w < ((y * Game.ChunkSize) + Game.ChunkSize); w++) {
+					Blocks[l][w] = (Block)in.readObject();
+				}
+			}
+	        in.close();
+	        fis.close();
+	      } catch (Exception e) {
+	    	  System.out.println("ERROR: Problem Loading Chunk: " + fileName);
+	          System.out.println(e);
+	      }
 	}
 	
 	public void unloadChunk(String fileName, int x, int y) {
-		System.out.println("Saving Chunk on Layer: " + name + "," + x + "," + y);
-		Chunks[x][y].save(fileName, x, y);
-		Chunks[x][y].blocks = null;
+		try {
+			FileOutputStream fos = new FileOutputStream(fileName + x + "_" + y + ".chunk");
+	        ObjectOutputStream out = new ObjectOutputStream(fos);
+	        
+			for(int l = (x * Game.ChunkSize); l < ((x * Game.ChunkSize) + Game.ChunkSize); l++) {
+				for(int w = (y * Game.ChunkSize); w < ((y * Game.ChunkSize) + Game.ChunkSize); w++) {
+					out.writeObject(Blocks[l][w]);
+					Blocks[l][w] = null;
+				}
+			}
+			
+	        out.flush();
+	        out.close();
+	        fos.close();
+	      } catch (IOException e) {
+	          System.out.println("ERROR: Problem Saving Chunk: " + fileName);
+	          System.out.println(e);
+	      }
 	}
+	
+	public void saveChunk(String fileName, int x, int y) {
+		try {
+			FileOutputStream fos = new FileOutputStream(fileName + x + "_" + y + ".chunk");
+	        ObjectOutputStream out = new ObjectOutputStream(fos);
+	        
+			for(int l = (x * Game.ChunkSize); l < ((x * Game.ChunkSize) + Game.ChunkSize); l++) {
+				for(int w = (y * Game.ChunkSize); w < ((y * Game.ChunkSize) + Game.ChunkSize); w++) {
+					out.writeObject(Blocks[l][w]);
+				}
+			}
+	        out.flush();
+	        out.close();
+	        fos.close();
+	      } catch (IOException e) {
+	          System.out.println("ERROR: Problem Saving Chunk: " + fileName);
+	          System.out.println(e);
+	      }
+	}
+	
+	
 }

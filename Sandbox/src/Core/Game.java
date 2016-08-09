@@ -66,7 +66,6 @@ public class Game {
 		name.getLayer("Foreground").unloadLayer();
 		name.getLayer("Background").unloadLayer();
 		
-		//name.LoadChunk("newWorld", 0, 0);
 		//name.WorldLoad("newWorld");
 		name.UpdateChunks();
 		
@@ -105,7 +104,6 @@ public class Game {
 	private void tick() {
 		time.update();
 		MouseListener.tick();
-		name.WorldRender();
 		//name.UpdateChunks();
 	}
 	

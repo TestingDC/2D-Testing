@@ -1,14 +1,10 @@
 package Blocks;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
 
 public class Tile {
 
@@ -22,6 +18,16 @@ public class Tile {
 		try {
 			voidBlock = new Image("resources/terrain/voidBlock.png");
 			cursor = new Image("resources/misc/cursor.png");
+			
+			File dir = new File("src/resources/terrain");
+			
+			//for(File f : dir.listFiles()) {
+				//if(f.getName().endsWith(".png")) {
+					//Textures.put(Short.parseShort(f.getName().substring(0, 1)), new Image(f.getPath()));
+				//}
+			//}
+			
+			
 		} catch (Exception e) {
 			System.out.println("Error while importing Images! " + e);
 		}
@@ -43,10 +49,4 @@ public class Tile {
 			}
 		}
 	}
-	
-	public static void cleanUpTiles() {
-		// Check Blocks in players view.
-		// If there is a block that is loaded that isnt in the players view. Unload those textures.
-	}
-	
 }

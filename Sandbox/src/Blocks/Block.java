@@ -27,9 +27,10 @@ public class Block extends Rectangle {
 	
 	public void render(int x, int y, byte width, byte height) {
 		//Color Color = new Color(lightLevel, lightLevel, lightLevel);
-		Color Color = new Color(255,255,255);
+		//Color Color = new Color(255,255,255);
+		//Color.bind();
 		Tile.voidBlock.drawEmbedded((x + Camera.CameraX), (y + Camera.CameraY), width, height);
-		//Tile.Textures.get(id).getSubImage((int) (rotation % 7), (int) Math.floor(rotation / 7), 32, 32).draw((x + Camera.CameraX), (y + Camera.CameraY), width, height, Color);
-		//                                                                                      ^ Tile texture Size.
+		//Tile.Textures.get(id).getSubImage((int) (rotation % 7), (int) Math.floor(rotation / 7), 32, 32).drawEmbedded((x + Camera.CameraX), (y + Camera.CameraY), width, height);
+		//                                                                                      ^ Tile texture Size in Image..
 	}
 }

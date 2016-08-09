@@ -256,9 +256,7 @@ public class World {
 		   for(int l = 0; l < this.worldLayers.size(); l++) {
 			   for(int x = BlockX; x < BlockX + Game.DisplayXBlk; x++) {
 				   for(int y = BlockY; y < BlockY + Game.DisplayYBlk; y++) {
-					   
 					   worldLayers.get(l).renderBlock(x, y);
-					   
 				   }
 			   }
 		   }
